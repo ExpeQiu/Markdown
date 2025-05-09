@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { handleMarkdownInsert } from '../../utils/markdown';
 import MarkdownToolbar from './MarkdownToolbar';
@@ -11,6 +11,7 @@ import './EditorPane.css';
 function EditorPane() {
   const { documentContent, setDocumentContent } = useAppContext();
   const textareaRef = useRef(null);
+  const [localImages, setLocalImages] = useState([]);
   
   // 处理文本更改
   const handleContentChange = (e) => {
@@ -18,7 +19,7 @@ function EditorPane() {
   };
   
   // 处理Markdown工具栏按钮点击
-  const handleToolbarAction = (action) => {
+  const handleToolbarAction = (action, param1, param2) => {
     if (!textareaRef.current) return;
     
     const textarea = textareaRef.current;
@@ -30,8 +31,20 @@ function EditorPane() {
       documentContent, 
       start, 
       end, 
-      action
+      action,
+      param1,
+      param2
     );
+    
+    // 如果是插入本地图片，保存到本地状态
+    if (action === 'insertLocalImage' && param1) {
+      const newImage = {
+        id: Date.now(),
+        url: param1,
+        name: param2 || '未命名图片'
+      };
+      setLocalImages([...localImages, newImage]);
+    }
     
     // 更新文本内容
     setDocumentContent(result.text);
@@ -66,6 +79,16 @@ function EditorPane() {
       }, 0);
     }
   };
+
+  // 组件卸载时清理本地图片 URL
+  useEffect(() => {
+    return () => {
+      // 清理所有创建的临时图片 URL
+      localImages.forEach(image => {
+        URL.revokeObjectURL(image.url);
+      });
+    };
+  }, [localImages]);
   
   return (
     <section className="editor-pane">

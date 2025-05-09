@@ -48,14 +48,39 @@ export function insertMarkdown(text, selectionStart, selectionEnd, markdownBefor
 }
 
 /**
+ * 直接在光标位置插入文本
+ * @param {string} text - 原始文本内容
+ * @param {number} selectionStart - 光标位置
+ * @param {string} insertText - 要插入的文本
+ * @returns {Object} 包含新文本和新光标位置的对象
+ */
+export function insertTextAtCursor(text, selectionStart, insertText) {
+  // 创建新文本，在光标位置插入文本
+  const newText = 
+    text.substring(0, selectionStart) + 
+    insertText + 
+    text.substring(selectionStart);
+  
+  // 计算新的光标位置
+  const newPosition = selectionStart + insertText.length;
+  
+  return {
+    text: newText,
+    cursorPosition: newPosition
+  };
+}
+
+/**
  * 处理不同Markdown格式的插入
  * @param {string} text - 原始文本
  * @param {number} selectionStart - 选择开始位置
  * @param {number} selectionEnd - 选择结束位置
  * @param {string} format - 要插入的格式类型
+ * @param {string} [param1] - 可选参数1，用于某些格式类型
+ * @param {string} [param2] - 可选参数2，用于某些格式类型
  * @returns {Object} 包含新文本和新光标位置的对象
  */
-export function handleMarkdownInsert(text, selectionStart, selectionEnd, format) {
+export function handleMarkdownInsert(text, selectionStart, selectionEnd, format, param1, param2) {
   let result;
   
   switch (format) {
@@ -65,6 +90,14 @@ export function handleMarkdownInsert(text, selectionStart, selectionEnd, format)
       
     case 'italic':
       result = insertMarkdown(text, selectionStart, selectionEnd, '*', '*', '斜体文本');
+      break;
+      
+    case 'underline':
+      result = insertMarkdown(text, selectionStart, selectionEnd, '<u>', '</u>', '下划线文本');
+      break;
+      
+    case 'strikethrough':
+      result = insertMarkdown(text, selectionStart, selectionEnd, '~~', '~~', '删除线文本');
       break;
       
     case 'link':
@@ -98,6 +131,16 @@ export function handleMarkdownInsert(text, selectionStart, selectionEnd, format)
       result = insertMarkdown(text, selectionStart, selectionEnd, '1. ', '', '列表项');
       break;
       
+    case 'table':
+      // 插入简单表格
+      const tableTemplate = 
+        '| 标题1 | 标题2 | 标题3 |\n' +
+        '| ----- | ----- | ----- |\n' +
+        '| 内容1 | 内容2 | 内容3 |\n' +
+        '| 内容4 | 内容5 | 内容6 |';
+      result = insertMarkdown(text, selectionStart, selectionEnd, tableTemplate, '', '');
+      break;
+      
     case 'h1':
       result = insertMarkdown(text, selectionStart, selectionEnd, '# ', '', '一级标题');
       break;
@@ -108,6 +151,26 @@ export function handleMarkdownInsert(text, selectionStart, selectionEnd, format)
       
     case 'h3':
       result = insertMarkdown(text, selectionStart, selectionEnd, '### ', '', '三级标题');
+      break;
+      
+    case 'heading':
+      // 标题选择，简化为一级标题
+      result = insertMarkdown(text, selectionStart, selectionEnd, '# ', '', '标题');
+      break;
+    
+    case 'insertEmoji':
+      // 插入表情符号
+      result = insertTextAtCursor(text, selectionStart, param1 || '😊');
+      break;
+      
+    case 'insertLocalImage':
+      // 插入本地图片
+      const altText = param2 || '本地图片';
+      result = insertTextAtCursor(
+        text, 
+        selectionStart, 
+        `![${altText}](${param1})`
+      );
       break;
       
     default:
