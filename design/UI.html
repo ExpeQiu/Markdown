@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线 Markdown 编辑器</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scroll, manage scrolling in panes */
+        }
+
+        /* Header */
+        .app-header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 60px;
+            flex-shrink: 0;
+        }
+        .app-header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .app-header .document-title-container {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .app-header .document-title {
+            padding: 8px 12px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 500;
+            min-width: 200px;
+            text-align: center;
+        }
+        .app-header .document-title:hover, .app-header .document-title:focus {
+            border-color: #ccc;
+            background-color: #f9f9f9;
+        }
+        .app-header .actions button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: 1px solid #3498db;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .app-header .actions button.secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            border-color: #ccc;
+        }
+        .app-header .actions button:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden; /* Handles overflow for child elements */
+        }
+
+        /* Editor and Preview Panes */
+        .editor-pane, .preview-pane {
+            flex: 1;
+            padding: 0; /* Padding will be on inner elements */
+            overflow-y: auto;
+            height: 100%;
+            background-color: #ffffff;
+            position: relative; /* For toolbar positioning */
+        }
+        .editor-pane {
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .markdown-toolbar {
+            background-color: #f8f9fa;
+            padding: 8px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .markdown-toolbar button {
+            padding: 5px 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .markdown-toolbar button:hover {
+            background-color: #f0f0f0;
+        }
+
+        #markdown-input {
+            width: calc(100% - 30px); /* Account for padding */
+            height: calc(100% - 40px - 15px); /* Account for toolbar and padding */
+            border: none;
+            padding: 15px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            color: #2c3e50;
+        }
+
+        .preview-area {
+            padding: 20px;
+            line-height: 1.7;
+            color: #333;
+        }
+        /* Basic Markdown styles for preview */
+        .preview-area h1 { font-size: 2em; border-bottom: 1px solid #eee; padding-bottom: .3em; margin-top: 1.5em; margin-bottom: 1em; }
+        .preview-area h2 { font-size: 1.6em; border-bottom: 1px solid #eee; padding-bottom: .3em; margin-top: 1.2em; margin-bottom: 0.8em; }
+        .preview-area h3 { font-size: 1.3em; margin-top: 1em; margin-bottom: 0.6em; }
+        .preview-area p { margin-bottom: 1em; }
+        .preview-area ul, .preview-area ol { margin-bottom: 1em; padding-left: 2em; }
+        .preview-area code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: #f0f0f0;
+            padding: .2em .4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .preview-area pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1em;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        .preview-area pre code { background-color: transparent; padding: 0; }
+        .preview-area blockquote {
+            border-left: 4px solid #ccc;
+            padding-left: 1em;
+            margin-left: 0;
+            color: #666;
+        }
+        .preview-area table { border-collapse: collapse; width: auto; margin-bottom: 1em; }
+        .preview-area th, .preview-area td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .preview-area th { background-color: #f2f2f2; }
+        .preview-area img { max-width: 100%; height: auto; }
+
+
+        /* Styling Panel */
+        .styling-panel {
+            width: 280px;
+            background-color: #f8f9fa;
+            border-left: 1px solid #e0e0e0;
+            padding: 15px;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .styling-panel h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tabs button {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #555;
+            border-bottom: 2px solid transparent;
+        }
+        .tabs button.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .theme-selector .theme-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #fff;
+            text-align: center;
+        }
+        .theme-selector .theme-item:hover {
+            border-color: #3498db;
+            background-color: #e9f5ff;
+        }
+        .theme-selector .theme-item.selected {
+            border-color: #3498db;
+            background-color: #d1e9fc;
+            font-weight: bold;
+        }
+
+        #custom-css-input {
+            width: calc(100% - 20px); /* Account for padding */
+            height: 150px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            resize: vertical;
+            border-radius: 3px;
+        }
+        .styling-panel button.apply-css {
+            width: 100%;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .styling-panel button.apply-css:hover {
+            background-color: #27ae60;
+        }
+
+        /* Export Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .modal-header h4 { margin: 0; font-size: 1.3em; }
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover, .close-button:focus {
+            color: #333;
+            text-decoration: none;
+        }
+        .export-options label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .export-options select, .export-options input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .modal-footer button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            border: none;
+        }
+        .modal-footer button.primary {
+            background-color: #3498db;
+            color: white;
+            margin-right: 10px;
+        }
+        .modal-footer button.cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Footer (Optional) */
+        .app-footer {
+            background-color: #ffffff;
+            padding: 8px 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85em;
+            color: #666;
+            text-align: right;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo">MarkCraft</div>
+        <div class="document-title-container">
+            <input type="text" class="document-title" value="我的Markdown文档">
+        </div>
+        <div class="actions">
+            <button class="secondary" id="save-doc-btn" title="保存文档 (概念)">保存</button>
+            <button id="export-btn" title="导出文档">导出</button>
+            </div>
+    </header>
+
+    <div class="main-content">
+        <section class="editor-pane">
+            <div class="markdown-toolbar">
+                <button title="粗体"><b>B</b></button>
+                <button title="斜体"><i>I</i></button>
+                <button title="链接">&#128279;</button>
+                <button title="图片">&#128247;</button>
+                <button title="无序列表">&bull;&nbsp;&bull;&nbsp;&bull;</button>
+                <button title="有序列表">1.&nbsp;2.&nbsp;3.</button>
+                <button title="引用">&rdquo;</button>
+                <button title="代码块">&lt;/&gt;</button>
+                <button title="H1">H1</button>
+                <button title="H2">H2</button>
+                <button title="H3">H3</button>
+            </div>
+            <textarea id="markdown-input" placeholder="在此输入 Markdown..."></textarea>
+        </section>
+
+        <section class="preview-pane">
+            <div class="preview-area" id="markdown-preview">
+                <h1>预览区域</h1>
+                <p>当您在左侧编辑 Markdown 时，这里会实时显示渲染后的效果。</p>
+                <p>例如，这是一个 <strong>加粗</strong> 和 <em>斜体</em> 的文本。</p>
+                <ul>
+                    <li>列表项 1</li>
+                    <li>列表项 2</li>
+                </ul>
+                <pre><code class="language-javascript">function hello() {
+    console.log("你好，世界！");
+}</code></pre>
+                <blockquote>这是一个引用的例子。</blockquote>
+            </div>
+        </section>
+
+        <aside class="styling-panel">
+            <h3>样式与排版</h3>
+            <div class="tabs">
+                <button class="tab-button active" data-tab="themes">主题模板</button>
+                <button class="tab-button" data-tab="custom-css">自定义 CSS</button>
+            </div>
+
+            <div id="themes-content" class="tab-content active">
+                <h4>选择主题</h4>
+                <div class="theme-selector">
+                    <div class="theme-item selected" data-theme="default">默认简洁</div>
+                    <div class="theme-item" data-theme="academic">学术风格</div>
+                    <div class="theme-item" data-theme="technical">技术文档</div>
+                    <div class="theme-item" data-theme="dark">暗色模式</div>
+                    <div class="theme-item" data-theme="creative">创意风格</div>
+                </div>
+            </div>
+
+            <div id="custom-css-content" class="tab-content">
+                <h4>自定义 CSS</h4>
+                <textarea id="custom-css-input" placeholder="/* 在此输入您的 CSS 代码 */\n\n.preview-area h1 {\n  color: steelblue;\n}"></textarea>
+                <label style="display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9em;">
+                    <input type="checkbox" id="enable-custom-css" style="margin-right: 5px;"> 启用自定义CSS
+                </label>
+                <button class="apply-css">应用CSS</button>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="app-footer">
+        <span id="word-count">字数: 0</span> | <span id="status-message">就绪</span>
+    </footer>
+
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>导出文档</h4>
+                <span class="close-button" id="close-modal-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <label for="export-format">导出格式:</label>
+                    <select id="export-format">
+                        <option value="pdf">PDF</option>
+                        <option value="png">PNG</option>
+                    </select>
+                </div>
+                <div id="pdf-options">
+                    <label for="pdf-paper-size">纸张大小:</label>
+                    <select id="pdf-paper-size">
+                        <option value="a4">A4</option>
+                        <option value="letter">Letter</option>
+                    </select>
+                    <label for="pdf-orientation">方向:</label>
+                    <select id="pdf-orientation">
+                        <option value="portrait">纵向 (Portrait)</option>
+                        <option value="landscape">横向 (Landscape)</option>
+                    </select>
+                </div>
+                <div id="png-options" style="display:none;">
+                    <p>PNG 将导出当前文档的完整视图。</p>
+                    </div>
+            </div>
+            <div class="modal-footer" style="text-align: right; margin-top: 20px;">
+                <button class="cancel" id="cancel-export-btn">取消</button>
+                <button class="primary" id="confirm-export-btn">确认导出</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Basic Tab functionality for Styling Panel
+    const tabButtons = document.querySelectorAll('.styling-panel .tab-button');
+    const tabContents = document.querySelectorAll('.styling-panel .tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            tabContents.forEach(content => content.classList.remove('active'));
+            document.getElementById(button.dataset.tab + '-content').classList.add('active');
+        });
+    });
+
+    // Basic Theme Selector Visual Feedback
+    const themeItems = document.querySelectorAll('.theme-selector .theme-item');
+    themeItems.forEach(item => {
+        item.addEventListener('click', () => {
+            themeItems.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            // In a real app, this would trigger theme change in the preview
+            document.getElementById('status-message').textContent = `主题 '${item.textContent}' 已选择。`;
+        });
+    });
+
+    // Export Modal Logic
+    const exportBtn = document.getElementById('export-btn');
+    const exportModal = document.getElementById('export-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cancelExportBtn = document.getElementById('cancel-export-btn');
+    const exportFormatSelect = document.getElementById('export-format');
+    const pdfOptionsDiv = document.getElementById('pdf-options');
+    const pngOptionsDiv = document.getElementById('png-options');
+
+    exportBtn.onclick = () => {
+        exportModal.style.display = 'flex';
+    }
+    closeModalBtn.onclick = () => {
+        exportModal.style.display = 'none';
+    }
+    cancelExportBtn.onclick = () => {
+        exportModal.style.display = 'none';
+    }
+    window.onclick = (event) => {
+        if (event.target == exportModal) {
+            exportModal.style.display = 'none';
+        }
+    }
+    exportFormatSelect.onchange = () => {
+        if (exportFormatSelect.value === 'pdf') {
+            pdfOptionsDiv.style.display = 'block';
+            pngOptionsDiv.style.display = 'none';
+        } else {
+            pdfOptionsDiv.style.display = 'none';
+            pngOptionsDiv.style.display = 'block';
+        }
+    }
+    document.getElementById('confirm-export-btn').onclick = () => {
+        alert(`准备导出为 ${exportFormatSelect.value.toUpperCase()}... (此为UI演示)`);
+        exportModal.style.display = 'none';
+    }
+
+    // Mock Markdown Input to Preview and Word Count
+    const markdownInput = document.getElementById('markdown-input');
+    const markdownPreview = document.getElementById('markdown-preview');
+    const wordCountEl = document.getElementById('word-count');
+
+    markdownInput.addEventListener('keyup', function() {
+        // Basic word count (very naive)
+        const text = this.value.trim();
+        const words = text.length > 0 ? text.split(/\s+/).length : 0;
+        wordCountEl.textContent = `字数: ${words}`;
+
+        // VERY basic preview - in a real app, use a Markdown parser library
+        // This is just for a rough visual.
+        let html = this.value
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>') // Very simplified list
+            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+            .replace(/\*(.*)\*/gim, '<em>$1</em>')
+            .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+            .replace(/`(.*?)`/gim, '<code>$1</code>')
+            .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+            .replace(/\n/g, '<br>'); // Naive paragraph handling
+
+        // Consolidate multiple <ul> generated by the simple regex
+        html = html.replace(/<\/ul>\s*<br>\s*<ul>/gim, '');
+
+
+        markdownPreview.innerHTML = html || "<p>预览将在此显示...</p>";
+        document.getElementById('status-message').textContent = `正在编辑...`;
+
+    });
+
+    // Initialize preview and word count
+    markdownInput.dispatchEvent(new Event('keyup'));
+    // Initialize PDF options display in modal
+    exportFormatSelect.dispatchEvent(new Event('change'));
+
+</script>
+
+</body>
+</html>

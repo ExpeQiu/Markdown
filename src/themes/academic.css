@@ -1,0 +1,177 @@
+/* 学术风格主题 */
+
+.preview-academic {
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.5;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: justify;
+}
+
+/* 标题样式 */
+.preview-academic h1 {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  font-weight: bold;
+  color: #000;
+}
+
+.preview-academic h2 {
+  font-size: 1.5em;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+  font-weight: bold;
+  color: #000;
+}
+
+.preview-academic h3 {
+  font-size: 1.3em;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  font-weight: bold;
+  color: #000;
+}
+
+.preview-academic h4 {
+  font-size: 1.1em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-style: italic;
+  color: #000;
+}
+
+/* 段落样式 */
+.preview-academic p {
+  margin-bottom: 1em;
+  text-indent: 2em;
+}
+
+/* 列表样式 */
+.preview-academic ul, .preview-academic ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.preview-academic li {
+  margin-bottom: 0.5em;
+}
+
+/* 代码样式 */
+.preview-academic code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f5f5f5;
+  padding: .2em .4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.preview-academic pre {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 1em;
+  overflow-x: auto;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.preview-academic pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 引用样式 */
+.preview-academic blockquote {
+  font-style: italic;
+  margin: 1.5em 2em;
+  padding: 0 1em;
+  border-left: 3px solid #ccc;
+  color: #555;
+}
+
+/* 表格样式 */
+.preview-academic table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 2em 0;
+  font-size: 0.9em;
+}
+
+.preview-academic th, .preview-academic td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.preview-academic th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.preview-academic caption {
+  caption-side: bottom;
+  text-align: center;
+  font-style: italic;
+  padding: 8px;
+  color: #666;
+}
+
+/* 链接样式 */
+.preview-academic a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.preview-academic a:hover {
+  text-decoration: underline;
+}
+
+/* 图片样式 */
+.preview-academic img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5em auto;
+  border: 1px solid #eee;
+}
+
+.preview-academic figure {
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+.preview-academic figcaption {
+  font-style: italic;
+  text-align: center;
+  color: #666;
+  margin-top: 0.5em;
+}
+
+/* 分割线样式 */
+.preview-academic hr {
+  height: 1px;
+  background-color: #ccc;
+  border: none;
+  margin: 2em 0;
+}
+
+/* 脚注样式 */
+.preview-academic .footnote {
+  font-size: 0.8em;
+  color: #666;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+.preview-academic .footnotes {
+  margin-top: 3em;
+  border-top: 1px solid #ccc;
+  padding-top: 1em;
+  font-size: 0.9em;
+} 

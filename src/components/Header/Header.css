@@ -1,0 +1,75 @@
+.app-header {
+  background-color: #ffffff;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.app-header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.app-header .document-title-container {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.app-header .document-title {
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: 500;
+  min-width: 200px;
+  text-align: center;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app-header input.document-title {
+  border-color: #ccc;
+  background-color: #fff;
+  cursor: text;
+  outline: none;
+}
+
+.app-header .document-title:hover {
+  border-color: #ccc;
+  background-color: #f9f9f9;
+}
+
+.app-header .actions {
+  display: flex;
+  gap: 10px;
+}
+
+.app-header .actions button {
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.app-header .actions button.primary {
+  background-color: #3498db;
+  color: white;
+  border: 1px solid #3498db;
+}
+
+.app-header .actions button.secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.app-header .actions button:hover {
+  opacity: 0.9;
+} 

@@ -1,0 +1,139 @@
+/* 默认简洁主题 */
+
+.preview-default {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.7;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 标题样式 */
+.preview-default h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: .3em;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  color: #2c3e50;
+}
+
+.preview-default h2 {
+  font-size: 1.6em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: .3em;
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
+  color: #2c3e50;
+}
+
+.preview-default h3 {
+  font-size: 1.3em;
+  margin-top: 1em;
+  margin-bottom: 0.6em;
+  color: #2c3e50;
+}
+
+.preview-default h4 {
+  font-size: 1.1em;
+  margin-top: 0.8em;
+  margin-bottom: 0.5em;
+  color: #2c3e50;
+}
+
+/* 段落样式 */
+.preview-default p {
+  margin-bottom: 1em;
+}
+
+/* 列表样式 */
+.preview-default ul, .preview-default ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.preview-default li {
+  margin-bottom: 0.3em;
+}
+
+/* 代码样式 */
+.preview-default code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  background-color: #f0f0f0;
+  padding: .2em .4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.preview-default pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1em;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.preview-default pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 引用样式 */
+.preview-default blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  color: #666;
+}
+
+/* 表格样式 */
+.preview-default table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.preview-default th, .preview-default td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.preview-default th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.preview-default tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 链接样式 */
+.preview-default a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.preview-default a:hover {
+  text-decoration: underline;
+}
+
+/* 图片样式 */
+.preview-default img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+/* 分割线样式 */
+.preview-default hr {
+  height: 1px;
+  background-color: #ddd;
+  border: none;
+  margin: 2em 0;
+} 

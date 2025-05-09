@@ -1,0 +1,48 @@
+.theme-selector h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333;
+  font-size: 1em;
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.theme-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #fff;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.theme-item:hover {
+  border-color: #3498db;
+  background-color: #e9f5ff;
+}
+
+.theme-item.selected {
+  border-color: #3498db;
+  background-color: #d1e9fc;
+  font-weight: bold;
+}
+
+.theme-preview {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.theme-preview-text {
+  margin: 0;
+  font-size: 0.9em;
+  text-align: center;
+} 

@@ -1,0 +1,143 @@
+/* 暗色主题 */
+
+.preview-dark {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.7;
+  color: #e0e0e0;
+  background-color: #1e1e1e;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 标题样式 */
+.preview-dark h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #444;
+  padding-bottom: .3em;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  color: #fff;
+}
+
+.preview-dark h2 {
+  font-size: 1.6em;
+  border-bottom: 1px solid #444;
+  padding-bottom: .3em;
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
+  color: #fff;
+}
+
+.preview-dark h3 {
+  font-size: 1.3em;
+  margin-top: 1em;
+  margin-bottom: 0.6em;
+  color: #fff;
+}
+
+.preview-dark h4 {
+  font-size: 1.1em;
+  margin-top: 0.8em;
+  margin-bottom: 0.5em;
+  color: #fff;
+}
+
+/* 段落样式 */
+.preview-dark p {
+  margin-bottom: 1em;
+}
+
+/* 列表样式 */
+.preview-dark ul, .preview-dark ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.preview-dark li {
+  margin-bottom: 0.3em;
+}
+
+/* 代码样式 */
+.preview-dark code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  background-color: #2d2d2d;
+  padding: .2em .4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: #f8f8f2;
+}
+
+.preview-dark pre {
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 1em;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.preview-dark pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 引用样式 */
+.preview-dark blockquote {
+  border-left: 4px solid #666;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  color: #bbb;
+}
+
+/* 表格样式 */
+.preview-dark table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.preview-dark th, .preview-dark td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: left;
+}
+
+.preview-dark th {
+  background-color: #333;
+  font-weight: bold;
+}
+
+.preview-dark tr:nth-child(even) {
+  background-color: #2a2a2a;
+}
+
+/* 链接样式 */
+.preview-dark a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.preview-dark a:hover {
+  text-decoration: underline;
+  color: #5dade2;
+}
+
+/* 图片样式 */
+.preview-dark img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+  border: 1px solid #444;
+}
+
+/* 分割线样式 */
+.preview-dark hr {
+  height: 1px;
+  background-color: #444;
+  border: none;
+  margin: 2em 0;
+} 
